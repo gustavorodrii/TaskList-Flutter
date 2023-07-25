@@ -4,23 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:tarefas/baseLogin/custom_text_field.dart';
 import 'package:tarefas/config/custom_colors.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({
+  const RegisterPage({
     super.key,
     this.onTap,
   });
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  void signUserIn() async {
+  void signUserUp() async {
     showDialog(
       context: context,
       builder: (context) {
@@ -31,16 +32,21 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      Navigator.pop(context);
+      if (passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else {
+        Navigator.pop(context);
+        showErrorMassage('As senhas não coincidem');
+      }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       showErrorMassage(e.code);
     }
+    Navigator.pop(context);
   }
 
   void showErrorMassage(String message) {
@@ -51,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: CustomColors.customContrastColor,
           title: Text(
             message,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
             textAlign: TextAlign.center,
           ),
         );
@@ -144,6 +150,12 @@ class _LoginPageState extends State<LoginPage> {
                       isSecret: true,
                       controller: passwordController,
                     ),
+                    CustomTextField(
+                      icon: Icons.lock,
+                      label: 'Confirmar Senha',
+                      isSecret: true,
+                      controller: confirmPasswordController,
+                    ),
                     SizedBox(
                       height: 50,
                       child: ElevatedButton(
@@ -153,9 +165,9 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        onPressed: signUserIn,
+                        onPressed: signUserUp,
                         child: const Text(
-                          'Entrar',
+                          'Confirmar Cadastro',
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
@@ -163,11 +175,11 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Esqueceu a senha?',
+                        onPressed: widget.onTap,
+                        child: Text(
+                          'Voltar a tela de Login',
                           style: TextStyle(
-                            color: Colors.redAccent,
+                            color: CustomColors.customSwatchColor,
                           ),
                         ),
                       ),
@@ -198,28 +210,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 50,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          side: BorderSide(
-                            width: 2,
-                            color: CustomColors.customSwatchColor,
-                          ),
-                        ),
-                        onPressed: widget.onTap,
-                        child: Text(
-                          'Criar conta',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: CustomColors.customSwatchColor),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
                     SizedBox(
                       height: 50,
                       child: ElevatedButton(

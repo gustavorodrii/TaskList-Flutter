@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "849315931892",
+    "project_id": "tarefasdiarias-ed6b3",
+    "storage_bucket": "tarefasdiarias-ed6b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849315931892:android:4befbe3a1adcd158f220a1",
+        "android_client_info": {
+          "package_name": "com.example.tarefas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849315931892-psctnks4uf00cv7t0rsku1kucb6uecee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPXwlzzzElBBu8-0OwU8VRQlZqiuG_aA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849315931892-psctnks4uf00cv7t0rsku1kucb6uecee.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "849315931892-8p4eqvabslm5du2a457bccv12e78gduv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tarefas.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
