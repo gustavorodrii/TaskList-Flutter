@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:tarefas/baseLogin/custom_text_field.dart';
 import 'package:tarefas/config/custom_colors.dart';
 
+import '../services/auth_service.dart';
+
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
   const RegisterPage({
@@ -223,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               MaterialStateProperty.all<Color>(Colors.black),
                           elevation: MaterialStateProperty.all<double>(0),
                         ),
-                        onPressed: () {},
+                        onPressed: () => AuthService().signInWithGoogle(),
                         child: Row(
                           children: [
                             Image.asset('assets/google.png',

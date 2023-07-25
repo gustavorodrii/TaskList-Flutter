@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tarefas/baseLogin/custom_text_field.dart';
 import 'package:tarefas/config/custom_colors.dart';
+import 'package:tarefas/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -233,7 +234,7 @@ class _LoginPageState extends State<LoginPage> {
                               MaterialStateProperty.all<Color>(Colors.black),
                           elevation: MaterialStateProperty.all<double>(0),
                         ),
-                        onPressed: () {},
+                        onPressed: () => AuthService().signInWithGoogle(),
                         child: Row(
                           children: [
                             Image.asset('assets/google.png',
