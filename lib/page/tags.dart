@@ -42,11 +42,11 @@ class _TagsPageState extends State<TagsPage> {
             },
           ),
           itemBuilder: (index) {
-            final Item? currentItem = tags[index];
+            final Item currentItem = tags[index];
             return ItemTags(
               index: index,
-              title: currentItem?.title ?? '',
-              customData: currentItem?.customData ?? null,
+              title: currentItem.title ?? '',
+              customData: currentItem.customData,
               textStyle: TextStyle(fontSize: 14),
               combine: ItemTagsCombine.withTextBefore,
               onPressed: (i) => print(i),
