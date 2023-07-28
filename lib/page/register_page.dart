@@ -230,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           children: [
                             Image.asset('assets/google.png',
                                 width: 30, height: 30),
-                            SizedBox(width: 40),
+                            const SizedBox(width: 40),
                             const Text(
                               'Faça login com Google',
                               style: TextStyle(fontSize: 18),

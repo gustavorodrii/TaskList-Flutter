@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: CustomColors.customContrastColor,
           title: Text(
             message,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
             textAlign: TextAlign.center,
           ),
         );
@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Image.asset('assets/google.png',
                                 width: 30, height: 30),
-                            SizedBox(width: 40),
+                            const SizedBox(width: 40),
                             const Text(
                               'Faça login com Google',
                               style: TextStyle(fontSize: 18),

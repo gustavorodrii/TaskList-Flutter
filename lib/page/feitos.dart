@@ -1,30 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tarefas/config/custom_colors.dart';
-import 'package:tarefas/page/favoritos.dart';
-import 'package:tarefas/page/feitos.dart';
 import 'package:tarefas/page/perfil.dart';
 import 'package:tarefas/page/tags.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+import '../config/custom_colors.dart';
+import 'favoritos.dart';
+import 'home_page.dart';
+
+class FeitosPage extends StatelessWidget {
+  const FeitosPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Menu'),
-        backgroundColor: Colors.transparent,
-      ),
-      drawer: NavigationDrawer(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: const Text('Nova Tarefa'),
-        icon: const Icon(Icons.add),
-        elevation: 2,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          title: const Text('Feitos'),
+          backgroundColor: Colors.transparent,
+        ),
+      );
 }
 
 class NavigationDrawer extends StatelessWidget {

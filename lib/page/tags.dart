@@ -1,30 +1,66 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tarefas/config/custom_colors.dart';
-import 'package:tarefas/page/favoritos.dart';
-import 'package:tarefas/page/feitos.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:tarefas/page/perfil.dart';
-import 'package:tarefas/page/tags.dart';
+import '../config/custom_colors.dart';
+import 'favoritos.dart';
+import 'feitos.dart';
+import 'home_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class TagsPage extends StatefulWidget {
+  TagsPage({super.key, required this.title});
+
+  final String title;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Menu'),
-        backgroundColor: Colors.transparent,
-      ),
-      drawer: NavigationDrawer(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: const Text('Nova Tarefa'),
-        icon: const Icon(Icons.add),
-        elevation: 2,
-      ),
-    );
-  }
+  State<TagsPage> createState() => _TagsPageState();
+}
+
+class _TagsPageState extends State<TagsPage> {
+  List<Item> tags = [];
+  final GlobalKey<TagsState> _globalKey = GlobalKey<TagsState>();
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          title: const Text('Tags'),
+          backgroundColor: Colors.transparent,
+        ),
+        body: Tags(
+          key: _globalKey,
+          itemCount: tags.length,
+          columns: 6,
+          textField: TagsTextField(
+            textStyle: const TextStyle(fontSize: 14),
+            onSubmitted: (String string) {
+              setState(() {
+                tags.add(
+                  Item(title: string),
+                );
+              });
+            },
+          ),
+          itemBuilder: (index) {
+            final Item? currentItem = tags[index];
+            return ItemTags(
+              index: index,
+              title: currentItem?.title ?? '',
+              customData: currentItem?.customData ?? null,
+              textStyle: TextStyle(fontSize: 14),
+              combine: ItemTagsCombine.withTextBefore,
+              onPressed: (i) => print(i),
+              onLongPressed: (i) => print(i),
+              removeButton: ItemTagsRemoveButton(onRemoved: () {
+                setState(() {
+                  tags.removeAt(index);
+                });
+                return true;
+              }),
+            );
+          },
+        ),
+      );
 }
 
 class NavigationDrawer extends StatelessWidget {
