@@ -89,7 +89,7 @@ class NavigationDrawer extends StatelessWidget {
               ),
               title: const Text('Menu'),
               onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const HomePage())),
+                  MaterialPageRoute(builder: (context) => HomePage())),
             ),
             ListTile(
               leading: Icon(
@@ -123,10 +123,8 @@ class NavigationDrawer extends StatelessWidget {
               title: const Text('Tags'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => TagsPage(
-                          title: '',
-                        )));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => TagsPage()));
               },
             ),
             ListTile(

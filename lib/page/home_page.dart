@@ -1,13 +1,45 @@
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarefas/config/custom_colors.dart';
 import 'package:tarefas/page/favoritos.dart';
 import 'package:tarefas/page/feitos.dart';
 import 'package:tarefas/page/perfil.dart';
+import 'package:tarefas/page/register_item.dart';
 import 'package:tarefas/page/tags.dart';
+import 'package:tarefas/page/data_class.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, this.taskData});
+  final TaskData? taskData;
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<TaskData> taskList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.taskData != null) {
+      taskList.add(widget.taskData!);
+    }
+    loadTaskData();
+  }
+
+  void loadTaskData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? taskDataJson = prefs.getString('taskData');
+    if (taskDataJson != null) {
+      TaskData taskData = TaskData.fromJson(jsonDecode(taskDataJson));
+      setState(() {
+        taskList.add(taskData);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +48,29 @@ class HomePage extends StatelessWidget {
         title: const Text('Menu'),
         backgroundColor: Colors.transparent,
       ),
+      body: ListView.builder(
+        itemCount: taskList.length,
+        itemBuilder: (context, index) {
+          final taskData = taskList[index];
+          return ListTile(
+            title: Text(taskData.taskName),
+            subtitle: Text(taskData.tags.join(', ')),
+            trailing: Text(
+              '${taskList[index].dateTime.day}/${taskList[index].dateTime.month}/${taskList[index].dateTime.year} ${taskList[index].dateTime.hour}:${taskList[index].dateTime.minute.toString().padLeft(2, '0')}',
+            ),
+          );
+        },
+      ),
       drawer: NavigationDrawer(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RegisterItem(taskList: taskList),
+            ),
+          );
+        },
         label: const Text('Nova Tarefa'),
         icon: const Icon(Icons.add),
         elevation: 2,
@@ -96,7 +148,7 @@ class NavigationDrawer extends StatelessWidget {
               ),
               title: const Text('Menu'),
               onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const HomePage())),
+                  MaterialPageRoute(builder: (context) => HomePage())),
             ),
             ListTile(
               leading: Icon(
@@ -130,10 +182,8 @@ class NavigationDrawer extends StatelessWidget {
               title: const Text('Tags'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => TagsPage(
-                          title: '',
-                        )));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => TagsPage()));
               },
             ),
             ListTile(
