@@ -20,22 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<TaskData> taskList = [];
-  List<TaskData> feitosList = [];
-
-  Future<void> enviarTarefaConcluida(TaskData taskData) async {
-    setState(() {
-      taskData.completed = true;
-      feitosList.add(taskData);
-      saveTaskList();
-    });
-
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FeitosPage(),
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -81,13 +65,38 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu'),
+        title: const Text('Menu'),
         backgroundColor: Colors.transparent,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 20),
         child: Column(
           children: [
+            const Row(
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.arrow_right),
+                    Text(
+                      'deslize para confirmar',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Text(
+                  'deslize para deletar',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.redAccent),
+                ),
+                Icon(Icons.arrow_left),
+              ],
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: taskList.length,
@@ -99,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                     background: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.all(
                             Radius.circular(20),
@@ -133,7 +142,6 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         if (direction == DismissDirection.endToStart) {
                           // Right-to-left swipe (Green background) - Save the task to feitosList
-                          enviarTarefaConcluida(taskData);
                         } else if (direction == DismissDirection.startToEnd) {
                           // Left-to-right swipe (Red background) - Delete the task
                           taskList.removeAt(index);
@@ -144,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                     child: Card(
                       color: Colors.white, // Cor de fundo do Card
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(20),
                         ),
                         side: BorderSide(
@@ -209,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.bookmarks_sharp,
                                   size: 18,
                                   color: Colors.black,

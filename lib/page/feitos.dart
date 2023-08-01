@@ -15,13 +15,15 @@ class FeitosPage extends StatefulWidget {
 
 class _FeitosPageState extends State<FeitosPage> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        drawer: NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Feitos'),
-          backgroundColor: Colors.transparent,
-        ),
-      );
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: NavigationDrawer(),
+      appBar: AppBar(
+        title: const Text('Feitos'),
+        backgroundColor: Colors.transparent,
+      ),
+    );
+  }
 }
 
 class NavigationDrawer extends StatelessWidget {
@@ -115,8 +117,8 @@ class NavigationDrawer extends StatelessWidget {
               title: const Text('Feitos'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const FeitosPage()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => FeitosPage()));
               },
             ),
             ListTile(

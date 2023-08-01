@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TaskData {
   String taskName;
   List<String> tags;
@@ -30,4 +32,13 @@ class TaskData {
     required this.isNoDateAndTime,
     this.completed = false,
   });
+}
+
+class TaskDataProvider extends ChangeNotifier {
+  List<TaskData> feitosList = [];
+
+  void addFeitos(TaskData taskData) {
+    feitosList.add(taskData);
+    notifyListeners();
+  }
 }

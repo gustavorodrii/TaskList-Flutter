@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tarefas/page/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tarefas/page/data_class.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -16,13 +18,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Tarefas',
-      theme: ThemeData(
-        brightness: ThemeData.dark().brightness,
+    return ChangeNotifierProvider(
+      create: (context) => TaskDataProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Tarefas',
+        theme: ThemeData(
+          brightness: ThemeData.dark().brightness,
+        ),
+        home: AuthPage(),
       ),
-      home: AuthPage(),
     );
   }
 }
