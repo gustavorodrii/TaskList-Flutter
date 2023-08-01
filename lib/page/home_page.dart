@@ -110,27 +110,71 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 16), // Espaçamento interno do Card
+                          horizontal: 16,
+                          vertical: 16,
+                        ), // Espaçamento interno do Card
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              child: Text(
-                                taskData.taskName,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 34,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    taskData.taskName,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.timer,
+                                          color: Colors.black,
+                                        ),
+                                        SizedBox(width: 4),
+                                        Container(
+                                          color: Colors.grey.shade400,
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(
+                                            '${taskData.dateTime.day}/${taskData.dateTime.month}/${taskData.dateTime.year} ${taskData.dateTime.hour}:${taskData.dateTime.minute.toString().padLeft(2, '0')}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (taskData.isNoDateAndTime)
+                                      Container(
+                                        color: Colors.grey.shade400,
+                                        padding: const EdgeInsets.all(8),
+                                        child: Text(
+                                          'Sem data e horário',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                                height:
-                                    18), // Espaçamento entre o taskName e as tags
+                            const SizedBox(height: 18),
                             Row(
                               children: [
-                                const Icon(Icons.bookmarks_sharp,
-                                    color: Colors.black),
+                                const Icon(
+                                  Icons.bookmarks_sharp,
+                                  color: Colors.black,
+                                ),
                                 const SizedBox(width: 4),
                                 ...taskData.tags.map((tag) {
                                   return Container(
@@ -142,9 +186,9 @@ class _HomePageState extends State<HomePage> {
                                     margin: const EdgeInsets.only(
                                         right: 8), // Espaçamento entre as tags
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                        vertical:
-                                            4), // Espaçamento interno da tag
+                                      horizontal: 4,
+                                      vertical: 4,
+                                    ), // Espaçamento interno da tag
                                     child: Text(
                                       tag,
                                       style: const TextStyle(
@@ -155,30 +199,6 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   );
                                 }).toList(),
-                              ],
-                            ),
-                            SizedBox(
-                                height:
-                                    8), // Espaçamento entre as tags e o horário
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.timer,
-                                  color: Colors.black,
-                                ),
-                                SizedBox(width: 4),
-                                Container(
-                                  color: Colors
-                                      .grey.shade400, // Fundo cinza do horário
-                                  padding: const EdgeInsets.all(
-                                      8), // Espaçamento interno do horário
-                                  child: Text(
-                                    '${taskData.dateTime.day}/${taskData.dateTime.month}/${taskData.dateTime.year} ${taskData.dateTime.hour}:${taskData.dateTime.minute.toString().padLeft(2, '0')}',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
                               ],
                             ),
                           ],

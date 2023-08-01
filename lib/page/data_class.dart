@@ -8,7 +8,7 @@ class TaskData {
     return {
       'taskName': taskName,
       'tags': tags,
-      'dateTime': dateTime?.toIso8601String(),
+      'dateTime': dateTime.toIso8601String(),
       'isNoDateAndTime': isNoDateAndTime,
     };
   }
