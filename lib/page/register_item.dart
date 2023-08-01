@@ -1,14 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarefas/config/custom_colors.dart';
 import 'package:tarefas/page/home_page.dart';
 import 'package:tarefas/page/data_class.dart';
 
 class RegisterItem extends StatefulWidget {
-  const RegisterItem({super.key, required this.taskList});
-  final List<TaskData> taskList;
+  const RegisterItem({super.key, required this.onAddTask});
+  final Function(TaskData taskData) onAddTask;
 
   @override
   State<RegisterItem> createState() => _RegisterItemState();
@@ -18,7 +15,7 @@ class _RegisterItemState extends State<RegisterItem> {
   TextEditingController taskNameController = TextEditingController();
   List<String> selectedTags = [];
   bool? isChecked = false;
-  DateTime dateTime = DateTime(2023, 1, 1, 12, 00);
+  DateTime dateTime = DateTime(2023, 06, 1, 12, 00);
 
   String taskName = '';
   List<String> taskTags = [];
@@ -26,14 +23,43 @@ class _RegisterItemState extends State<RegisterItem> {
   void addTask() async {
     taskName = taskNameController.text;
     taskTags = List.from(selectedTags);
+
+    if (taskName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'O nome da tarefa é obrigatório',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+          ),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    if (taskTags.length > 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Você só pode adicionar até 2 tags',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+          ),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
     TaskData taskData = TaskData(
       taskName: taskName,
       tags: taskTags,
       dateTime: dateTime,
       isNoDateAndTime: isChecked ?? false,
     );
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('taskData', jsonEncode(taskData.toJson()));
+
+    widget.onAddTask(taskData);
 
     Navigator.push(
       context,

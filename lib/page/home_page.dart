@@ -32,34 +32,165 @@ class _HomePageState extends State<HomePage> {
 
   void loadTaskData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? taskDataJson = prefs.getString('taskData');
-    if (taskDataJson != null) {
-      TaskData taskData = TaskData.fromJson(jsonDecode(taskDataJson));
+    List<String>? taskListJson = prefs.getStringList('taskList');
+    if (taskListJson != null) {
+      List<TaskData> tasks = taskListJson
+          .map((taskDataJson) => TaskData.fromJson(jsonDecode(taskDataJson)))
+          .toList();
+
       setState(() {
-        taskList.add(taskData);
+        taskList = tasks;
       });
     }
+
+    if (widget.taskData != null && !taskList.contains(widget.taskData!)) {
+      setState(() {
+        taskList.add(widget.taskData!);
+      });
+
+      List<String> updatedTaskListJson =
+          taskList.map((taskData) => jsonEncode(taskData.toJson())).toList();
+      await prefs.setStringList('taskList', updatedTaskListJson);
+    }
+  }
+
+  void saveTaskList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> taskListJson =
+        taskList.map((taskData) => jsonEncode(taskData.toJson())).toList();
+    await prefs.setStringList('taskList', taskListJson);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
+        title: Text('Menu'),
         backgroundColor: Colors.transparent,
       ),
-      body: ListView.builder(
-        itemCount: taskList.length,
-        itemBuilder: (context, index) {
-          final taskData = taskList[index];
-          return ListTile(
-            title: Text(taskData.taskName),
-            subtitle: Text(taskData.tags.join(', ')),
-            trailing: Text(
-              '${taskList[index].dateTime.day}/${taskList[index].dateTime.month}/${taskList[index].dateTime.year} ${taskList[index].dateTime.hour}:${taskList[index].dateTime.minute.toString().padLeft(2, '0')}',
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 20),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: taskList.length,
+                itemBuilder: (context, index) {
+                  final taskData = taskList[index];
+
+                  return Dismissible(
+                    key: Key(taskData.taskName),
+                    background: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Icon(Icons.delete_forever),
+                        ),
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      setState(() {
+                        taskList.removeAt(index);
+                      });
+                      saveTaskList();
+                    },
+                    child: Card(
+                      color: Colors.white, // Cor de fundo do Card
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Colors.grey, width: 0.5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16), // Espaçamento interno do Card
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: Text(
+                                taskData.taskName,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 34,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(
+                                height:
+                                    18), // Espaçamento entre o taskName e as tags
+                            Row(
+                              children: [
+                                const Icon(Icons.bookmarks_sharp,
+                                    color: Colors.black),
+                                const SizedBox(width: 4),
+                                ...taskData.tags.map((tag) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: CustomColors
+                                          .customContrastColor, // Fundo da tag
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    margin: const EdgeInsets.only(
+                                        right: 8), // Espaçamento entre as tags
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                        vertical:
+                                            4), // Espaçamento interno da tag
+                                    child: Text(
+                                      tag,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ), // Cor do texto da tag
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            ),
+                            SizedBox(
+                                height:
+                                    8), // Espaçamento entre as tags e o horário
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.timer,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(width: 4),
+                                Container(
+                                  color: Colors
+                                      .grey.shade400, // Fundo cinza do horário
+                                  padding: const EdgeInsets.all(
+                                      8), // Espaçamento interno do horário
+                                  child: Text(
+                                    '${taskData.dateTime.day}/${taskData.dateTime.month}/${taskData.dateTime.year} ${taskData.dateTime.hour}:${taskData.dateTime.minute.toString().padLeft(2, '0')}',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
       drawer: NavigationDrawer(),
       floatingActionButton: FloatingActionButton.extended(
@@ -67,7 +198,9 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RegisterItem(taskList: taskList),
+              builder: (context) => RegisterItem(
+                onAddTask: (TaskData taskData) {},
+              ),
             ),
           );
         },
