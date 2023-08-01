@@ -111,8 +111,8 @@ class NavigationDrawer extends StatelessWidget {
               title: const Text('Feitos'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const FeitosPage()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => FeitosPage()));
               },
             ),
             ListTile(

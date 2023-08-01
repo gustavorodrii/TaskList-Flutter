@@ -3,6 +3,7 @@ class TaskData {
   List<String> tags;
   DateTime dateTime;
   bool isNoDateAndTime;
+  bool completed;
 
   Map<String, dynamic> toJson() {
     return {
@@ -27,5 +28,6 @@ class TaskData {
     required this.tags,
     required this.dateTime,
     required this.isNoDateAndTime,
+    this.completed = false,
   });
 }

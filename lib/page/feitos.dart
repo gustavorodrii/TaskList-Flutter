@@ -2,14 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tarefas/page/perfil.dart';
 import 'package:tarefas/page/tags.dart';
-
 import '../config/custom_colors.dart';
 import 'favoritos.dart';
 import 'home_page.dart';
 
-class FeitosPage extends StatelessWidget {
+class FeitosPage extends StatefulWidget {
   const FeitosPage({super.key});
 
+  @override
+  State<FeitosPage> createState() => _FeitosPageState();
+}
+
+class _FeitosPageState extends State<FeitosPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         drawer: NavigationDrawer(),

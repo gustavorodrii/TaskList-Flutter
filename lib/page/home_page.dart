@@ -20,6 +20,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<TaskData> taskList = [];
+  List<TaskData> feitosList = [];
+
+  Future<void> enviarTarefaConcluida(TaskData taskData) async {
+    setState(() {
+      taskData.completed = true;
+      feitosList.add(taskData);
+      saveTaskList();
+    });
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FeitosPage(),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -83,11 +99,28 @@ class _HomePageState extends State<HomePage> {
                     background: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Icon(Icons.done_all_outlined,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    secondaryBackground: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: Container(
                         alignment: Alignment.centerRight,
                         decoration: const BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.all(
-                            Radius.circular(8),
+                            Radius.circular(20),
                           ),
                         ),
                         child: const Padding(
@@ -98,15 +131,24 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onDismissed: (direction) {
                       setState(() {
-                        taskList.removeAt(index);
+                        if (direction == DismissDirection.endToStart) {
+                          // Right-to-left swipe (Green background) - Save the task to feitosList
+                          enviarTarefaConcluida(taskData);
+                        } else if (direction == DismissDirection.startToEnd) {
+                          // Left-to-right swipe (Red background) - Delete the task
+                          taskList.removeAt(index);
+                          saveTaskList();
+                        }
                       });
-                      saveTaskList();
                     },
                     child: Card(
                       color: Colors.white, // Cor de fundo do Card
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: const BorderSide(color: Colors.grey, width: 0.5),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                        side: BorderSide(
+                            color: CustomColors.customContrastColor, width: 3),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -121,26 +163,34 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Container(
                                   child: Text(
-                                    taskData.taskName,
+                                    taskData.taskName.toUpperCase(),
                                     style: const TextStyle(
                                       color: Colors.black,
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                Row(
+                                  // Novo widget Row para agrupar o timer, data e checkbox
                                   children: [
-                                    Row(
+                                    const Icon(
+                                      Icons.timer,
+                                      size: 18,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Column(
+                                      // Coluna para alinhar o ícone do timer e a data na vertical
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        Icon(
-                                          Icons.timer,
-                                          color: Colors.black,
-                                        ),
-                                        SizedBox(width: 4),
                                         Container(
-                                          color: Colors.grey.shade400,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            color: Colors.grey.shade400,
+                                          ),
                                           padding: const EdgeInsets.all(8),
                                           child: Text(
                                             '${taskData.dateTime.day}/${taskData.dateTime.month}/${taskData.dateTime.year}',
@@ -152,27 +202,16 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ],
                                     ),
-                                    if (taskData.isNoDateAndTime)
-                                      Container(
-                                        color: Colors.grey.shade400,
-                                        padding: const EdgeInsets.all(8),
-                                        child: Text(
-                                          'Sem data e horário',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
                                   ],
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 18),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.bookmarks_sharp,
+                                  size: 18,
                                   color: Colors.black,
                                 ),
                                 const SizedBox(width: 4),
@@ -186,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                                     margin: const EdgeInsets.only(
                                         right: 8), // Espaçamento entre as tags
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 4,
+                                      horizontal: 6,
                                       vertical: 4,
                                     ), // Espaçamento interno da tag
                                     child: Text(
@@ -323,8 +362,8 @@ class NavigationDrawer extends StatelessWidget {
               title: const Text('Feitos'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const FeitosPage()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => FeitosPage()));
               },
             ),
             ListTile(
