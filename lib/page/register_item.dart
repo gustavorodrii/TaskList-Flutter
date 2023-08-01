@@ -15,7 +15,7 @@ class _RegisterItemState extends State<RegisterItem> {
   TextEditingController taskNameController = TextEditingController();
   List<String> selectedTags = [];
   bool? isChecked = false;
-  DateTime dateTime = DateTime(2023, 06, 1, 12, 00);
+  DateTime dateTime = DateTime(2023, 06, 1);
 
   String taskName = '';
   List<String> taskTags = [];
@@ -73,8 +73,6 @@ class _RegisterItemState extends State<RegisterItem> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    final hours = dateTime.hour.toString().padLeft(2, '0');
-    final minutes = dateTime.minute.toString().padLeft(2, '0');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registrar Tarefa'),
@@ -98,8 +96,9 @@ class _RegisterItemState extends State<RegisterItem> {
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
-                      height: 50,
+                      height: 70,
                       child: TextFormField(
+                        maxLength: 15,
                         controller: taskNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -150,8 +149,6 @@ class _RegisterItemState extends State<RegisterItem> {
                                 date.year,
                                 date.month,
                                 date.day,
-                                dateTime.hour,
-                                dateTime.minute,
                               );
 
                               setState(() => dateTime = newDateTime);
@@ -159,28 +156,6 @@ class _RegisterItemState extends State<RegisterItem> {
                             child: Text(
                               '${dateTime.day}/${dateTime.month}/${dateTime.year}',
                             ),
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.grey),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              final time = await pickTime();
-                              if (time == null) return;
-                              final newDateTime = DateTime(
-                                dateTime.year,
-                                dateTime.month,
-                                dateTime.day,
-                                time.hour,
-                                time.minute,
-                              );
-                              setState(() => dateTime = newDateTime);
-                            },
-                            child: Text('$hours:$minutes'),
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.grey),
@@ -201,12 +176,8 @@ class _RegisterItemState extends State<RegisterItem> {
                             });
                           },
                         ),
-                        Text('Não quero marcar data e horário'),
+                        Text('Não quero marcar data'),
                       ],
-                    ),
-                    FloatingActionButton.extended(
-                      onPressed: addTask,
-                      label: Text('Adicionar Tarefa'),
                     ),
                   ],
                 ),
@@ -215,16 +186,13 @@ class _RegisterItemState extends State<RegisterItem> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: addTask,
+        label: Text('Adicionar Tarefa'),
+        elevation: 2,
+      ),
     );
   }
-
-  Future<TimeOfDay?> pickTime() => showTimePicker(
-        context: context,
-        initialTime: TimeOfDay(
-          hour: dateTime.hour,
-          minute: dateTime.minute,
-        ),
-      );
 
   Future<DateTime?> pickDate() => showDatePicker(
         context: context,

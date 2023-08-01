@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                                     taskData.taskName,
                                     style: const TextStyle(
                                       color: Colors.black,
-                                      fontSize: 34,
+                                      fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                                           color: Colors.grey.shade400,
                                           padding: const EdgeInsets.all(8),
                                           child: Text(
-                                            '${taskData.dateTime.day}/${taskData.dateTime.month}/${taskData.dateTime.year} ${taskData.dateTime.hour}:${taskData.dateTime.minute.toString().padLeft(2, '0')}',
+                                            '${taskData.dateTime.day}/${taskData.dateTime.month}/${taskData.dateTime.year}',
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
