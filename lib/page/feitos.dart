@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tarefas/page/perfil.dart';
 import 'package:tarefas/page/tags.dart';
+import 'package:tarefas/repositories/tarefa_repository.dart';
 import '../config/custom_colors.dart';
 import 'favoritos.dart';
 import 'home_page.dart';
@@ -21,6 +23,29 @@ class _FeitosPageState extends State<FeitosPage> {
       appBar: AppBar(
         title: const Text('Feitos'),
         backgroundColor: Colors.transparent,
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.all(12),
+        child: Consumer<TarefaRepository>(
+          builder: (context, tarefa, child) {
+            return tarefa.lista.isEmpty
+                ? ListTile(
+                    leading: Icon(Icons.done_all_outlined),
+                    title: Text('Você não tem tarefas feitas'),
+                  )
+                : ListView.builder(
+                    itemCount: tarefa.lista.length,
+                    itemBuilder: (context, index) {
+                      final taskData = tarefa.lista[index];
+                      return ListTile(
+                        leading: Icon(Icons.done),
+                        title: Text(taskData.taskName),
+                      );
+                    },
+                  );
+          },
+        ),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tarefas/page/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tarefas/page/data_class.dart';
+import 'package:tarefas/repositories/tarefa_repository.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -10,7 +10,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TarefaRepository(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,16 +23,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TaskDataProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Tarefas',
-        theme: ThemeData(
-          brightness: ThemeData.dark().brightness,
-        ),
-        home: AuthPage(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Tarefas',
+      theme: ThemeData(
+        brightness: ThemeData.dark().brightness,
       ),
+      home: AuthPage(),
     );
   }
 }

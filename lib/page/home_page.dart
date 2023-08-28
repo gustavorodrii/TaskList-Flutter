@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarefas/config/custom_colors.dart';
 import 'package:tarefas/page/favoritos.dart';
@@ -9,6 +10,7 @@ import 'package:tarefas/page/perfil.dart';
 import 'package:tarefas/page/register_item.dart';
 import 'package:tarefas/page/tags.dart';
 import 'package:tarefas/page/data_class.dart';
+import 'package:tarefas/repositories/tarefa_repository.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, this.taskData});
@@ -20,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<TaskData> taskList = [];
+  late TarefaRepository tarefas;
 
   @override
   void initState() {
@@ -63,6 +66,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    tarefas = Provider.of<TarefaRepository>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu'),
@@ -76,13 +81,16 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.arrow_right),
+                    Icon(
+                      Icons.arrow_right,
+                      color: Colors.green,
+                    ),
                     Text(
                       'deslize para confirmar',
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green),
+                          color: Colors.grey),
                     ),
                   ],
                 ),
@@ -92,9 +100,12 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.redAccent),
+                      color: Colors.grey),
                 ),
-                Icon(Icons.arrow_left),
+                Icon(
+                  Icons.arrow_left,
+                  color: Colors.redAccent,
+                ),
               ],
             ),
             Expanded(
@@ -141,9 +152,8 @@ class _HomePageState extends State<HomePage> {
                     onDismissed: (direction) {
                       setState(() {
                         if (direction == DismissDirection.endToStart) {
-                          // Right-to-left swipe (Green background) - Save the task to feitosList
+                          tarefas.saveAll([taskData]);
                         } else if (direction == DismissDirection.startToEnd) {
-                          // Left-to-right swipe (Red background) - Delete the task
                           taskList.removeAt(index);
                           saveTaskList();
                         }
